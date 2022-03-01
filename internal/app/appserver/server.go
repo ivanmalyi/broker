@@ -3,6 +3,7 @@ package appserver
 import (
 	"context"
 	"github.com/gorilla/mux"
+	"github.com/ivanmalyi/broker/internal/app/repository"
 	"github.com/sirupsen/logrus"
 	"go.uber.org/fx"
 	"net/http"
@@ -11,6 +12,7 @@ import (
 func RegisterHooks(
 	lifecycle fx.Lifecycle,
 	logger *logrus.Logger,
+	repo repository.Repository,
 	config *TomlConfig,
 	mux *mux.Router,
 ) {
@@ -21,7 +23,10 @@ func RegisterHooks(
 				go http.ListenAndServe(config.BindAddr, mux)
 				return nil
 			},
-			//OnStop: func(context.Context) error {},
+			OnStop: func(context.Context) error {
+				repo.Close()
+				return nil
+			},
 		},
 	)
 }

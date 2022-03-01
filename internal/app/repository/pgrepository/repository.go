@@ -12,8 +12,7 @@ type PgRepository struct {
 	applicationRepository *ApplicationRepository
 }
 
-func New(config *appserver.TomlConfig) *PgRepository {
-	var repo *PgRepository
+func New(config *appserver.TomlConfig) repository.Repository {
 	db, err := sql.Open("postgres", config.DatabaseUrl)
 	if err != nil {
 		panic(err)
@@ -23,19 +22,22 @@ func New(config *appserver.TomlConfig) *PgRepository {
 	if err != nil {
 		panic(err)
 	}
-	repo.db = db
 
-	return repo
+	return &PgRepository{db: db}
 }
 
-func (repository *PgRepository) Application() repository.ApplicationRepository {
-	if repository.applicationRepository != nil {
-		return repository.applicationRepository
+func (repo *PgRepository) Close() {
+	_ = repo.db.Close()
+}
+
+func (repo *PgRepository) Application() repository.ApplicationRepository {
+	if repo.applicationRepository != nil {
+		return repo.applicationRepository
 	}
 
-	repository.applicationRepository = &ApplicationRepository{
-		store: repository,
+	repo.applicationRepository = &ApplicationRepository{
+		store: repo,
 	}
 
-	return repository.applicationRepository
+	return repo.applicationRepository
 }

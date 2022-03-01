@@ -4,6 +4,7 @@ import "github.com/ivanmalyi/broker/internal/app/model"
 
 type Repository interface {
 	Application() ApplicationRepository
+	Close()
 }
 
 type ApplicationRepository interface {
