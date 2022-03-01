@@ -2,6 +2,7 @@ package handler
 
 import (
 	"github.com/gorilla/mux"
+	"github.com/ivanmalyi/broker/internal/app/repository"
 	"github.com/sirupsen/logrus"
 	"net/http"
 )
@@ -10,11 +11,12 @@ import (
 type Handler struct {
 	mux    *mux.Router
 	logger *logrus.Logger
+	repo   *repository.Repository
 }
 
 // New http handler
-func New(mux *mux.Router, logger *logrus.Logger) *Handler {
-	handler := Handler{mux, logger}
+func New(mux *mux.Router, logger *logrus.Logger, repo *repository.Repository) *Handler {
+	handler := Handler{mux, logger, repo}
 	handler.registerRoutes()
 
 	return &handler
