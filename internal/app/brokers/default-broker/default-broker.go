@@ -17,5 +17,9 @@ func (broker *DefaultBroker) Auth() {
 }
 
 func (broker *DefaultBroker) CreateApp() string {
+	_, err := broker.Repo.Application().Find(10)
+	if err != nil {
+		return ""
+	}
 	return `{"id": "broker_id"}`
 }

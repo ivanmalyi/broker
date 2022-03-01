@@ -40,5 +40,6 @@ func (h *Handler) createApplication(writer http.ResponseWriter, req *http.Reques
 	writer.WriteHeader(http.StatusOK)
 	broker := brokers.GetBroker(brokerKey, h.repo)
 	response := broker.CreateApp()
+
 	writer.Write([]byte(response))
 }
